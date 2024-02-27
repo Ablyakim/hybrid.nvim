@@ -8,8 +8,8 @@ M.palette = {
     black           = "#1d1f21",
     dull_black      = "#151718",
 
-    bright_white    = "#eaeaea",
-    white           = "#c5c8c6",
+    bright_white    = "#FDFDFD",
+    white           = "#e2e2e2",
     dull_white      = "#707880",
 
     bright_red      = "#d54e53",
