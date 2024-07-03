@@ -39,7 +39,7 @@ function M.setup(opts)
         -- CursorLineFold = {},
         -- CursorLineSign = {},
         MatchParen = { bg = c.selection, bold = opts.bold },
-        -- ModeMsg = {},
+        ModeMsg = { fg = c.primary },
         -- MsgArea = {},
         -- MsgSeparator = {},
         MoreMsg = { fg = c.primary },
@@ -60,6 +60,7 @@ function M.setup(opts)
         Question = { fg = c.primary },
         QuickFixLine = { bg = c.selection, bold = opts.bold },
         Search = { fg = c.yellow, bg = c.bg, reverse = opts.inverse },
+        -- SnippetTabstop = {},
         SpecialKey = { fg = c.primary },
         SpellBad = { sp = c.diag.error, undercurl = opts.undercurl },
         SpellCap = { sp = c.diag.warning, undercurl = opts.undercurl },
@@ -128,6 +129,10 @@ function M.setup(opts)
         Error = { fg = c.diag.error, reverse = opts.inverse },
 
         Todo = { fg = c.diag.hint, reverse = opts.inverse }, -- TODO FIXME XXX
+
+        Added = { fg = c.diff.add },
+        Changed = { fg = c.diff.delete },
+        Removed = { fg = c.diff.change },
         -- }}}
 
         -- Treesitter
@@ -149,6 +154,7 @@ function M.setup(opts)
         -- @module.builtin    ; built-in modules or namespaces
         -- @label             ; GOTO and other labels (e.g. `label:` in C), including heredoc labels
 
+        ["@variable"] = { fg = c.fg },
         ["@variable.builtin"] = { fg = c.red },
         ["@variable.parameter"] = { fg = c.yellow },
         ["@variable.member"] = { fg = c.cyan },
@@ -180,9 +186,8 @@ function M.setup(opts)
         -- @type             ; type or class definitions and annotations
         -- @type.builtin     ; built-in types
         -- @type.definition  ; identifiers in type definitions (e.g. `typedef <type> <identifier>` in C)
-        -- @type.qualifier   ; type qualifiers (e.g. `const`)
 
-        -- @attribute          ; attribute annotations (e.g. Python decorators)
+        -- @attribute          ; attribute annotations (e.g. Python decorators, Rust lifetimes)
         -- @attribute.builtin  ; builtin annotations (e.g. `@property` in Python)
         -- @property           ; the key in key/value pairs
 
@@ -209,9 +214,9 @@ function M.setup(opts)
         -- @keyword.coroutine         ; keywords related to coroutines (e.g. `go` in Go, `async/await` in Python)
         -- @keyword.function          ; keywords that define a function (e.g. `func` in Go, `def` in Python)
         -- @keyword.operator          ; operators that are English words (e.g. `and` / `or`)
-        -- @keyword.import            ; keywords for including modules (e.g. `import` / `from` in Python)
-        -- @keyword.storage           ; modifiers that affect storage in memory or life-time
-        -- @keyword.type              ; keywords describing composite types (e.g. `struct`, `enum`)
+        -- @keyword.import            ; keywords for including or exporting modules (e.g. `import` / `from` in Python)
+        -- @keyword.type              ; keywords describing namespaces and composite types (e.g. `struct`, `enum`)
+        -- @keyword.modifier          ; keywords modifying other constructs (e.g. `const`, `static`, `public`)
         -- @keyword.repeat            ; keywords related to loops (e.g. `for` / `while`)
         -- @keyword.return            ; keywords like `return` and `yield`
         -- @keyword.debug             ; keywords related to debugging
@@ -281,6 +286,7 @@ function M.setup(opts)
         -- @diff.delta      ; changed text (for diff files)
 
         -- @tag           ; XML-style tag names (and similar)
+        -- @tag.builtin   ; builtin tag names (e.g. HTML5 tags)
         -- @tag.attribute ; XML-style tag attributes
         -- @tag.delimiter ; XML-style tag delimiters
 
@@ -289,13 +295,27 @@ function M.setup(opts)
         ["@markup.strikethrough"] = { strikethrough = opts.strikethrough },
         ["@markup.underline"] = { underline = opts.underline },
 
-        ["@markup.heading"] = { link = "Title" },
+        ["@markup.heading"] = { link = "Title", bold = opts.bold },
+        ["@markup.heading.1"] = { fg = c.bright_yellow, bold = opts.bold },
+        ["@markup.heading.2"] = { fg = c.bright_green, bold = opts.bold },
+        ["@markup.heading.3"] = { fg = c.bright_cyan, bold = opts.bold },
+        ["@markup.heading.4"] = { fg = c.yellow },
+        ["@markup.heading.5"] = { fg = c.green },
+        ["@markup.heading.6"] = { fg = c.cyan },
 
-        ["@markup.link"] = { link = "Constant" },
-        ["@markup.link.label"] = { link = "Label" },
-        ["@markup.link.url"] = { underline = opts.underline },
+        ["@markup.quote"] = { fg = c.blue },
+        ["@markup.math"] = { fg = c.magenta },
 
-        ["@markup.raw"] = { link = "String" },
+        ["@markup.list"] = { fg = c.blue },
+        ["@markup.list.checked"] = { fg = c.green },
+        ["@markup.list.unchecked"] = { fg = c.blue },
+
+        ["@markup.link"] = { fg = c.magenta },
+        ["@markup.link.label"] = { fg = c.bright_blue },
+        ["@markup.link.url"] = { fg = c.cyan, underline = opts.underline },
+
+        ["@markup.raw"] = { bg = c.bg_soft },
+        ["@markup.raw.block"] = { bg = c.bg_soft, fg = c.green },
 
         ["@tag"] = { link = "Label" },
         ["@tag.attribute"] = { link = "@property" },
@@ -307,6 +327,8 @@ function M.setup(opts)
 
         -- @spell   ; for defining regions to be spellchecked
         -- @nospell ; for defining regions that should NOT be spellchecked
+
+        ["@conceal"] = { fg = c.fg_soft },
         -- }}}
 
         -- Diagnostics
@@ -345,8 +367,8 @@ function M.setup(opts)
         -- LSP highlight
         -- :h lsp-highlight
         LspReferenceRead = { bg = c.selection, bold = opts.bold },
-        LspReferenceText = { bg = c.selection, bold = opts.bold },
-        LspReferenceWrite = { bg = c.selection, bold = opts.bold },
+        LspReferenceText = { bg = c.selection },
+        LspReferenceWrite = { bg = c.selection, bold = opts.bold, underline = opts.underline },
         LspSignatureActiveParameter = { link = "Visual" },
 
         -- Lspconfig
@@ -442,7 +464,7 @@ function M.setup(opts)
         NeoTreeSymbolicLinkTarget = { fg = c.cyan },
         NeoTreeFloatTitle = { fg = c.float.title },
         NeoTreeFileIcon = { fg = c.fg },
-        NeoTreeDimText = { fg = c.bg_soft },
+        NeoTreeDimText = { fg = c.fg_soft },
 
         -- Dashboard
         -- :h dashboard-configuration-theme-config
